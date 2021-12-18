@@ -1,0 +1,44 @@
+What is the overall goal of the project (i.e. what does it do, or what problem is it solving)?
+- The project is a simple match-3 game. It is a 4x4 game board attached with diamonds. To play the game:
+Click the left-mouse button down on a diamond, then drag the mouse onto another diamond and release
+the button. This will swap 2 diamonds and if we have 3 diamonds in a row, we have a match and those
+diamonds will be destroyed. Note: Only diamonds that are conscutive can be swapped. Each match worth 1 point.
+
+Which languages did you use, and what parts of the system are implemented in each?
+- The main game is written in C++ (minimum features is included for the game to run and play)
+- After player finish the game, we can run a simple flask app written in Python to display the best score of the player
+- The game is also runnable in brower by porting C++ program to Javascript program using Emscripten 
+
+What methods did you use to communicate between languages?
+- A text file will be used to save score from the game, the Python app will read the text file (score.txt) to find
+the best score and display it on a web page
+
+Exactly what steps should be taken to get the project working, after getting your code? [This should start with vagrant up or docker-compose up and can include one or two commands to start components after that.]
+- My docker-compose up failed and gave error:
+error: XDG_RUNTIME_DIR not set in the environment.
+dockerc_1  | error: XDG_RUNTIME_DIR not set in the environment.
+dockerc_1  | Couldn't initialize SDL: No available video device
+- However, you can test the project with these steps:
+1. To run the game on desktop:
+- Step 1 - To compile just run: make  
+- Step2 - To run : ./match3 
+- To install SDL2 and its libraries: 
+    sudo apt install libsdl2-dev libsdl2-2.0-0 -y
+    sudo apt install libjpeg-dev libwebp-dev libtiff5-dev libsdl2-image-dev libsdl2-image-2.0-0 -y
+    sudo apt install libmikmod-dev libfishsound1-dev libsmpeg-dev liboggz2-dev libflac-dev libfluidsynth-dev libsdl2-mixer-dev libsdl2-mixer-2.0-0 -y
+    sudo apt install libfreetype6-dev libsdl2-ttf-dev libsdl2-ttf-2.0-0 -y
+2. To run the game on browser:
+- Step 1 run: python -m SimpleHTTPServer
+- Step 2 open the game at http://localhost:8000/match3.html
+3. To display best score after each time you finish the game:
+- Just run "python3 app.py" and open the url: http://192.168.1.149:5000/ 
+
+SORRY FOR THIS INCONVENIENCE
+
+What features should we be looking for when marking your project?
+- The game can be played on desktop and browser
+
+Referenced: 
+https://python-adv-web-apps.readthedocs.io/en/latest/flask_db3.html
+https://www.parallelrealities.co.uk/tutorials/#shooter
+
