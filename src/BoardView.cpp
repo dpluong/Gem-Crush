@@ -17,9 +17,9 @@ void BoardView::InitBoardView()
     {
         for (int j = 0; j < width; ++j)
         {
-            boardView.push_back(std::make_shared<Diamond>());
-            int cell_x = 100 + boardView[index(j, i)]->GetDest().w * j + 5 * j;
-            int cell_y = 100 + boardView[index(j, i)]->GetDest().h * i + 5 * i; 
+            boardView.push_back(std::make_unique<Diamond>());
+            int cell_x = 100 + boardView[index(j, i)]->GetDest().w * j;
+            int cell_y = 100 + boardView[index(j, i)]->GetDest().h * i; 
             boardView[index(j, i)]->SetDest(cell_x, cell_y);
         }
     }
@@ -141,7 +141,7 @@ void BoardView::HandleMouseEvent(SDL_Event *e)
                 {
                     ClearMouseInputQueue();
                 }
-            } 
+            }
         } 
     }
 }
@@ -154,6 +154,16 @@ int BoardView::GetSelectedDiamondPosition(int mouse_x, int mouse_y)
     int top_left_y = boardView[index(0, 0)]->GetDest().y;
     int j = (mouse_x - top_left_x) / cell_width;
     int i = (mouse_y - top_left_y) / cell_height;
+    if (j == width)
+    {
+        j -= 1;
+    }
+    if (i == height)
+    {
+        i -= 1;
+    }
+    std::cout<< "Mouse x: " << mouse_x << ", " << " Mouse y: " << mouse_y <<std::endl;
+    std::cout<< i << ", "<< j << std::endl;
     return index(j, i);
 }
 

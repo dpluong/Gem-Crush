@@ -68,13 +68,13 @@ void App::Initialize()
 	swap_back = false;
     _isRunning = true;
     initSDL();
-    View = std::make_shared<BoardView>(4, 4);
-    Board = std::make_shared<DiamondBoard>(4, 4);
+    View = std::make_unique<BoardView>(4, 4);
+    Board = std::make_unique<DiamondBoard>(4, 4);
     
     Board->Initialize();
     View->InitBoardView();
     View->LoadImages();
-    Controller = std::make_shared<BoardController>(Board, View);
+    Controller = std::make_unique<BoardController>(Board, View);
     Controller->Initialize();
 }
 

@@ -8,7 +8,7 @@
 
 class BoardView {
     private:
-        std::vector< std::shared_ptr<Diamond> > boardView;
+        std::vector< std::unique_ptr<Diamond> > boardView;
         std::vector<int> selected_positions;
         std::vector<int> mapping_board;
 

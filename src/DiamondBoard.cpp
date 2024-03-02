@@ -21,7 +21,7 @@ void DiamondBoard::Initialize()
     {
         for (int j = 0; j < width; ++j)
         {
-            Board.push_back(std::make_shared<Block>());
+            Board.push_back(std::make_unique<Block>());
             Board[index(j, i)]->SetXYOnBoard(i, j);
             if (j != 2)
             {

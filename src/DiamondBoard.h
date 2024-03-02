@@ -11,7 +11,7 @@
 class DiamondBoard
 {
 private:
-    std::vector< std::shared_ptr<Block> > Board;
+    std::vector< std::unique_ptr<Block> > Board;
     int x_position;
     int y_positionl;
 public: 
