@@ -22,7 +22,7 @@ class BoardView {
         ~BoardView();
         int index(int x, int y) const { return x + width * y; }
         void InitBoardView();
-        void Debug();
+        void SwapDiamond();
         void LoadImages();
         void Render();
         void HandleMouseEvent(SDL_Event *);

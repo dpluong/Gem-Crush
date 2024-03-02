@@ -27,13 +27,10 @@ void BoardView::InitBoardView()
 
 
 
-void BoardView::Debug()
+void BoardView::SwapDiamond()
 {
-    
         if (selected_positions.size() >= 2)
         {
-        //_swapped = true;
-        //std::cout << "swap if not match" << std::endl;
             int x0 = boardView[selected_positions[0]]->GetDest().x;
             int y0 = boardView[selected_positions[0]]->GetDest().y;
             int x1 = boardView[selected_positions[1]]->GetDest().x;
@@ -43,9 +40,6 @@ void BoardView::Debug()
             boardView[selected_positions[1]]->SetDest(x0, y0);
             std::swap(boardView[selected_positions[0]], boardView[selected_positions[1]]);
         }
-
-        //selected_positions.clear();
-    
 }
 
 void BoardView::LoadImages()
