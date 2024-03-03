@@ -65,10 +65,8 @@ void BoardView::Render()
     {
         for (int j = 0; j < width; ++j)
         {
-            //std::cout << mapping_board[0] << std::endl;
             if (mapping_board[index(j, i)] == 0)
             {
-                //std::cout << "render match" << std::endl;
                 boardView[index(j, i)]->RenderMatch();
             } else
             {
@@ -96,47 +94,54 @@ void BoardView::HandleMouseEvent(SDL_Event *e)
 		{
             is_inside = false;
         }
-        //Mouse is right of the button
+        
 		else if( x > top_left_x + board_width )
 		{
 			is_inside = false;
 		}
-		//Mouse above the button
+		
 		else if( y < top_left_y )
 		{
 			is_inside = false;
 		}
-		//Mouse below the button
+		
 		else if( y > top_left_y + board_height )
 		{
 			is_inside = false;
 		}
 
+        if (!is_inside && e->type == SDL_MOUSEBUTTONUP)
+        {
+            ClearMouseInputQueue();
+        }
+
         if (is_inside)
         {
-            switch(e->type)
+            switch (e->type)
             {
-                case SDL_MOUSEBUTTONDOWN:
-                    selected_positions.push_back(GetSelectedDiamondPosition(x, y));
-                    break;
-                case SDL_MOUSEBUTTONUP:
-                    selected_positions.push_back(GetSelectedDiamondPosition(x, y));
-                    break;
+            case SDL_MOUSEBUTTONDOWN:
+                selected_positions.push_back(GetSelectedDiamondPosition(x, y));
+                break;
+            case SDL_MOUSEBUTTONUP:
+                selected_positions.push_back(GetSelectedDiamondPosition(x, y));
+                break;
             }
-            //Debug();
-            
-            if (selected_positions.size() == 2)
+        }
+
+        if (selected_positions.size() == 2)
+        {
+            if (CheckAdjacentCell())
             {
-                //std::cout << "swapping" << std::endl;
-                if (CheckAdjacentCell())
-                {
-                    _swapped = true;
-                } else 
-                {
-                    ClearMouseInputQueue();
-                }
+                _swapped = true;
             }
-        } 
+            else
+            {
+                ClearMouseInputQueue();
+            }
+        }
+
+
+        
     }
 }
 

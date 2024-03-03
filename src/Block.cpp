@@ -3,13 +3,6 @@
 
 Block::Block() { }
 Block::~Block() { }
-/*
-void Block::SetBlockPosition(int x, int y) 
-{
-    block_x = x;
-    block_y = y;
-    
-}*/
 
 int Block::GetValue()
 {

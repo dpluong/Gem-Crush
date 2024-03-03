@@ -80,64 +80,54 @@ void App::Initialize()
 
 void App::BrowserGameLoop()
 {
-	//bool swap_back = false;
-   
-    //Board->Debug();
+    prepareScene();
 
-    //while (_isRunning)
-    //{
-        
-        prepareScene();
-
-        SDL_Event event;
-	
-	    while (SDL_PollEvent(&event))
-	    {
-		    switch (event.type)
-		    {
-			    case SDL_QUIT:
-                    _isRunning = false;
-                    break;
-                default:
-                    View->HandleMouseEvent(&event);
-                    break;
-            }
-            
-	    }
-
-        Controller->Update();
-
-        //diamond->blit(diamond->GetX(), diamond->GetY());
-        //std::cout << diamond->GetDest().h << std::endl;
-        
-        View->Render();
-        if (swap_back)
+    SDL_Event event;    
+    // Polling input from mouse/keyboard
+    while (SDL_PollEvent(&event))
+    {
+        switch (event.type)
         {
-            SDL_Delay(100);
+        case SDL_QUIT:
+            _isRunning = false;
+            break;
+        default:
+            View->HandleMouseEvent(&event);
+            break;
         }
-        presentScene();
-        
-        if (Controller != nullptr)
-        {
-            Controller->SwapAgainIfNotMatch();
-            swap_back = true;
-        }
-        View->ClearDiamondMatch();
-        //std::cout << Board->GetScore() << std::endl;
-        SDL_Delay(16);
-    //}
+    }
+    // Running the game logic such as matches, swapping and generating new diamonds
+    Controller->Update();
+    // Rendering the diamond board
+    View->Render();
+
+    // Swapping the diamonds back if there is no match
+    if (swap_back)
+    {
+        SDL_Delay(100);
+    }
+
+    presentScene();
+
+    if (Controller != nullptr)
+    {
+        Controller->SwapAgainIfNotMatch();
+        swap_back = true;
+    }
+
+    View->ClearDiamondMatch();
+    SDL_Delay(16);
 }
 
 void App::DesktopGameLoop()
 {
     while (_isRunning)
     {
-        
         prepareScene();
 
         SDL_Event event;
-	
-	    while (SDL_PollEvent(&event))
+        // Polling input from mouse/keyboard
+        while (SDL_PollEvent(&event))
 	    {
 		    switch (event.type)
 		    {
@@ -150,13 +140,13 @@ void App::DesktopGameLoop()
             }
             
 	    }
-
+        // Running the game logic such as matches, swapping and generating new diamonds
         Controller->Update();
-
-        //diamond->blit(diamond->GetX(), diamond->GetY());
-        //std::cout << diamond->GetDest().h << std::endl;
         
+        // Rendering the diamond board
         View->Render();
+
+        // Swapping the diamonds back if there is no match
         if (swap_back)
         {
             SDL_Delay(100);
@@ -169,7 +159,7 @@ void App::DesktopGameLoop()
             swap_back = true;
         }
         View->ClearDiamondMatch();
-        //std::cout << Board->GetScore() << std::endl;
+        
         SDL_Delay(16);
     }
 }
