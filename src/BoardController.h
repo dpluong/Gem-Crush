@@ -11,9 +11,13 @@ class BoardController {
         std::shared_ptr<DiamondBoard> m_Board;
         std::shared_ptr<BoardView> m_View; 
     public:
+        bool is_match = false;
+        bool is_swapped_back = false;
+    public:
         BoardController(std::shared_ptr<DiamondBoard>, std::shared_ptr<BoardView> );
         void Initialize();
         void Update();
+        void UpdateAfterMatch();
         void SwapAgainIfNotMatch();
 };
 

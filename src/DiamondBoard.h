@@ -28,6 +28,7 @@ public:
     bool Check3x3Square(int, int);
     bool CheckRow(int, int);
     bool CheckColumn(int, int);
+    void FillingBoard();
     std::vector<int> ExportBoard();
     int GetScore();
 };

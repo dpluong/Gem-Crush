@@ -59,7 +59,7 @@ void Diamond::ClearMatch()
 	if (match != nullptr)
     {
         SDL_DestroyTexture(match);
-		texture = nullptr;
+		match = nullptr;
 	}
 }
 

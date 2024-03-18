@@ -68,14 +68,19 @@ void App::Initialize()
 	swap_back = false;
     _isRunning = true;
     initSDL();
-    View = std::make_unique<BoardView>(4, 4);
-    Board = std::make_unique<DiamondBoard>(4, 4);
-    
+    View = std::make_unique<BoardView>(8, 10);
+    Board = std::make_unique<DiamondBoard>(8, 10);
+    Controller = std::make_unique<BoardController>(Board, View);
+
     Board->Initialize();
+    while (Board->CheckMatch())
+    {
+        Board->FillingBoard();
+    }
+    
+    Controller->Initialize();
     View->InitBoardView();
     View->LoadImages();
-    Controller = std::make_unique<BoardController>(Board, View);
-    Controller->Initialize();
 }
 
 void App::BrowserGameLoop()
@@ -147,19 +152,20 @@ void App::DesktopGameLoop()
         View->Render();
 
         // Swapping the diamonds back if there is no match
-        if (swap_back)
+        if (Controller->is_swapped_back)
         {
             SDL_Delay(100);
         }
         presentScene();
-        
-        if (Controller != nullptr)
+        if (Controller->is_match)
         {
-            Controller->SwapAgainIfNotMatch();
-            swap_back = true;
+            SDL_Delay(200);
         }
-        View->ClearDiamondMatch();
         
+        Controller->SwapAgainIfNotMatch();
+        
+        View->ClearDiamondMatch();
+        Controller->UpdateAfterMatch();
         SDL_Delay(16);
     }
 }

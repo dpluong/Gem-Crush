@@ -48,12 +48,28 @@ void BoardView::LoadImages()
     {
         for (int j = 0; j < width; ++j)
         {
-            if (j == 2)
+            switch (mapping_board[index(j, i)])
             {
-                boardView[index(j, i)]->loadTexture((char *)"assets/2.png");
-            } else
-            {
-                boardView[index(j, i)]->loadTexture((char *)"assets/1.png");
+            case 1:
+                //if (boardView[index(j, i)]->GetTexture() == nullptr)
+                    boardView[index(j, i)]->loadTexture((char *)"assets/1.png");
+                break;
+            case 2:
+                //if (boardView[index(j, i)]->GetTexture() == nullptr)
+                    boardView[index(j, i)]->loadTexture((char *)"assets/2.png");
+                break;
+            case 3:
+                //if (boardView[index(j, i)]->GetTexture() == nullptr)
+                    boardView[index(j, i)]->loadTexture((char *)"assets/3.png");
+                break;
+            case 4:
+                //if (boardView[index(j, i)]->GetTexture() == nullptr)
+                    boardView[index(j, i)]->loadTexture((char *)"assets/4.png");
+                break;
+            case 5:
+                //if (boardView[index(j, i)]->GetTexture() == nullptr)
+                    boardView[index(j, i)]->loadTexture((char *)"assets/5.png");
+                break;
             }
         }
     }
@@ -161,8 +177,8 @@ int BoardView::GetSelectedDiamondPosition(int mouse_x, int mouse_y)
     {
         i -= 1;
     }
-    std::cout<< "Mouse x: " << mouse_x << ", " << " Mouse y: " << mouse_y <<std::endl;
-    std::cout<< i << ", "<< j << std::endl;
+    //std::cout<< "Mouse x: " << mouse_x << ", " << " Mouse y: " << mouse_y <<std::endl;
+    //std::cout<< i << ", "<< j << std::endl;
     return index(j, i);
 }
 
@@ -206,7 +222,9 @@ void BoardView::UpdateMappingBoard(std::vector<int> board)
         for (int j = 0; j < width; ++j) 
         {
             mapping_board[index(j, i)] = board[index(j, i)];
+            std::cout << mapping_board[index(j, i)] << " ";
         }
+        std::cout << std::endl;
     }
 }
 

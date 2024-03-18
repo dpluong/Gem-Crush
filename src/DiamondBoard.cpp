@@ -17,24 +17,21 @@ DiamondBoard::~DiamondBoard()
 
 void DiamondBoard::Initialize()
 {
+    srand(time(0));
     for (int i = 0; i < height; ++i)
     {
         for (int j = 0; j < width; ++j)
         {
             Board.push_back(std::make_unique<Block>());
             Board[index(j, i)]->SetXYOnBoard(i, j);
-            if (j != 2)
-            {
-                Board[index(j, i)]->SetValue(1);
-            } else 
-            {
-                Board[index(j, i)]->SetValue(2);
-            }
+            int newValue = std::rand() % 5 + 1;
+            Board[index(j, i)]->SetValue(newValue);
             //int block_x = 100 + Board[index(j, i)]->GetBlockWidth() * j;
             //int block_y = 100 + Board[index(j, i)]->GetBlockHeight() * i; 
             //Board[index(j, i)]->SetBlockPosition(block_x, block_y);
         }
     }
+
 }
 
 void DiamondBoard::SwapValue(int cell0, int cell1)
@@ -48,7 +45,6 @@ void DiamondBoard::SwapValue(int cell0, int cell1)
 
 bool DiamondBoard::CheckRow(int x, int row)
 {
-
     if (Board[index(x, row)]->GetValue() == 0 || Board[index(x + 1, row)]->GetValue() == 0 || Board[index(x + 2, row)]->GetValue() == 0)
     {
         return false;
@@ -99,13 +95,52 @@ bool DiamondBoard::Check3x3Square(int x, int y)
     bool _middleCollumn = false;
     bool _lastCollumn = false;
     
-    /*if (!_firstRow && !_middleRow && !_lastRow)
+    if (!_firstRow && !_middleRow && !_lastRow)
     {
         _firstColumn = CheckColumn(first_row, first_collumn);
         _middleCollumn = CheckColumn(first_row, middle_collumn);
         _lastCollumn = CheckColumn(first_row, last_column);
-    }*/
+    }
     return _firstRow || _middleRow || _lastRow || _firstColumn || _middleCollumn || _lastCollumn ;
+}
+
+void DiamondBoard::FillingBoard()
+{
+    
+    srand(time(0));
+    for (int j = 0; j < width; ++j)
+    {
+        for (int i = height - 1; i >= 0; --i)
+        {
+            if (Board[index(j, i)]->GetValue() != 0)
+                continue;
+            else
+            {
+                int row = i;
+                while (Board[index(j, row)]->GetValue() == 0 && row > 0)
+                {
+                    --row;
+                }
+                
+                if (row == 0 && Board[index(j, row)]->GetValue() == 0)
+                {
+                    // Generate new tiles
+                    while (i >= 0)
+                    {
+                        int newValue = std::rand() % 5 + 1;
+                        Board[index(j, i)]->SetValue(newValue);
+                        --i;
+                    }
+                    break;
+                }
+                else
+                {
+                    Board[index(j, i)]->SetValue(Board[index(j, row)]->GetValue());
+                    Board[index(j, row)]->SetValue(0);
+                }
+            }
+        }
+    }
 }
 
 bool DiamondBoard::CheckMatch()
@@ -127,11 +162,18 @@ bool DiamondBoard::CheckMatch()
 
 std::vector<int> DiamondBoard::ExportBoard()
 {
+    //srand(time(0));
     std::vector<int> board;
     for (int i = 0; i < height; ++i)
     {
         for (int j = 0; j < width; ++j) 
         {
+            /*
+            if (Board[index(j, i)]->GetValue() == 0)
+            {
+                int newValue = std::rand() % 5 + 1;
+                Board[index(j, i)]->SetValue(newValue);
+            }*/
             board.push_back(Board[index(j, i)]->GetValue());
         }
     }
