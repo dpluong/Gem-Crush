@@ -18,15 +18,14 @@ void BoardController::Update()
     {
         
         m_Board->SwapValue(m_View->GetSelectedDiamondPositions()[0], m_View->GetSelectedDiamondPositions()[1]);
-        if (m_Board->CheckMatch())
+        if (m_Board->CheckForMatches())
         {
 
             m_View->SwapDiamond();
 
             m_View->ClearMouseInputQueue();
-            //m_Board->FillingBoard();
+
             m_View->UpdateMappingBoard(m_Board->ExportBoard());
-            //m_View->LoadImages();
             is_match = true;
             is_swapped_back = false;
         }
@@ -43,7 +42,7 @@ void BoardController::Update()
     }
     else
     {
-        if (m_Board->CheckMatch())
+        if (m_Board->CheckForMatches())
         {
             is_match = true;
             //m_Board->FillingBoard();

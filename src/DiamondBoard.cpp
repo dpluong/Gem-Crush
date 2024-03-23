@@ -43,67 +43,6 @@ void DiamondBoard::SwapValue(int cell0, int cell1)
     //std::cout << "Swapped " << Board[cell0]->GetValue() << " and " << Board[cell1]->GetValue() << std::endl;
 }
 
-bool DiamondBoard::CheckRow(int x, int row)
-{
-    if (Board[index(x, row)]->GetValue() == 0 || Board[index(x + 1, row)]->GetValue() == 0 || Board[index(x + 2, row)]->GetValue() == 0)
-    {
-        return false;
-    }
-    if(Board[index(x, row)]->GetValue() == Board[index(x + 1, row)]->GetValue() && Board[index(x, row)]->GetValue() == Board[index(x + 2, row)]->GetValue())
-    {
-        
-        Board[index(x, row)]->SetValue(0);
-        Board[index(x + 1, row)]->SetValue(0);
-        Board[index(x + 2, row)]->SetValue(0);
-        return true;
-    }
-    return false;
-}
-
-bool DiamondBoard::CheckColumn(int x, int collumn)
-{
-    if (Board[index(collumn, x)]->GetValue() == 0 || Board[index(collumn ,x + 1)]->GetValue() == 0 || Board[index(collumn, x + 2)]->GetValue() == 0)
-    {
-        return false;
-    }
-    if (Board[index(collumn, x)]->GetValue() == Board[index(collumn, x + 1)]->GetValue() && Board[index(collumn, x)]->GetValue() == Board[index(collumn, x + 2)]->GetValue())
-    {
-        
-        Board[index(collumn, x)]->SetValue(0);
-        Board[index(collumn, x + 1)]->SetValue(0);
-        Board[index(collumn, x + 2)]->SetValue(0);
-        return true;
-    }
-    return false;
-}
-
-bool DiamondBoard::Check3x3Square(int x, int y)
-{
-    int first_collumn = x;
-    int first_row = y;
-    int middle_collumn = x + 1;
-    int middle_row = y + 1;
-    int last_column = x + 2;
-    int last_row = y + 2;
-    bool _firstRow;
-    bool _middleRow;
-    bool _lastRow;
-    _firstRow = CheckRow(first_collumn, first_row);
-    _middleRow = CheckRow(first_collumn, middle_row);
-    _lastRow = CheckRow(first_collumn, last_row);
-    bool _firstColumn = false;
-    bool _middleCollumn = false;
-    bool _lastCollumn = false;
-    
-    if (!_firstRow && !_middleRow && !_lastRow)
-    {
-        _firstColumn = CheckColumn(first_row, first_collumn);
-        _middleCollumn = CheckColumn(first_row, middle_collumn);
-        _lastCollumn = CheckColumn(first_row, last_column);
-    }
-    return _firstRow || _middleRow || _lastRow || _firstColumn || _middleCollumn || _lastCollumn ;
-}
-
 void DiamondBoard::FillingBoard()
 {
     
@@ -143,21 +82,222 @@ void DiamondBoard::FillingBoard()
     }
 }
 
-bool DiamondBoard::CheckMatch()
+void DiamondBoard::FloodFill(int row, int col, bool &have_matches, std::vector<int> &horizontal, std::vector<int> &verical, std::vector<int> &matches)
 {
-    bool is_match = false;
-    for (int i = 0; i < height - 2; ++i)
+    const int dr[] = {0, 0, 1, -1};
+    const int dc[] = {1, -1, 0, 0};
+
+    if (Board[index(col, row)] == nullptr || visited[row][col])
+        return;
+
+    visited[row][col] = true;
+    /*int matchValue = Board[index(col, row)]->GetValue();
+
+    if (horizontal.empty() || std::abs(index(col, row) - horizontal.back()) == 1)
     {
-        for (int j = 0; j < width - 2; ++j) 
+        if (horizontal.size() != 0)
         {
-            if (Check3x3Square(j, i))
+            //std::cout << horizontal.back() << " " << index(col, row) << std::endl;
+        }
+        horizontal.push_back(index(col, row));
+    }
+
+    if (horizontal.size() >= 3)
+    {
+        if (col + dc[0] >= width || (col + dc[0] < width && matchValue != Board[index(col + dc[0], row)]->GetValue()))
+        have_matches = true;
+        for (int i = 0; i < horizontal.size(); ++i)
+        {
+            //std::cout << Board[horizontal[i]]->GetValue() << " ";
+           //Board[horizontal[i]]->SetValue(0);
+           
+           matches.push_back(horizontal[i]);
+        }
+        //std::cout << std::endl;
+        horizontal.clear();
+    }
+    
+    
+    if (verical.empty() || std::abs(index(col, row) - verical.back()) == width)
+    {
+        verical.push_back(index(col, row));
+    }
+
+    if (verical.size() >= 3)
+    {
+        if (row + dr[2] >= height || (row + dr[2] < height && matchValue != Board[index(col, row + dr[2])]->GetValue()))
+        {
+            have_matches = true;
+            for (int i = 0; i < verical.size(); ++i)
             {
-                is_match = true;
-                score += 1;
+                //Board[verical[i]]->SetValue(0);
+                
+                matches.push_back(verical[i]);
+            }
+            verical.clear();
+        }
+    }*/
+
+    // Define directions: right, left, down, up
+    for (int d = 0; d < 4; ++d)
+    {
+        int newRow = row + dr[d];
+        int newCol = col + dc[d];
+        if (newRow >= 0 && newRow < height && newCol >= 0 && newCol < width &&
+            !visited[newRow][newCol] && Board[index(newCol, newRow)]->GetValue() == Board[index(col, row)]->GetValue())
+        {
+            if (d <= 1)
+            {
+                //if (horizontal.empty() || std::abs(index(newCol, newRow) - horizontal.back()) == 1)
+                horizontal.push_back(index(newCol, newRow));
+                
+                /*if (verical.size() >= 3)
+                {
+                    for (int i = 0; i < verical.size(); ++i)
+                    {
+                        // Board[verical[i]]->SetValue(0);
+
+                        matches.push_back(verical[i]);
+                    }
+                }*/
+            }
+            
+            else
+            {
+                /*if (verical.empty() || std::abs(index(col, row) - verical.back()) == width)
+                    verical.push_back(index(newCol, newRow));
+                else
+                {
+                    verical.clear();
+                    verical.push_back(index(col, row));
+                    verical.push_back(index(newCol, newRow));
+                }*/
+                /*
+                if (horizontal.size() >= 3)
+                {
+                    for (int i = 0; i < horizontal.size(); ++i)
+                    {
+                        // Board[verical[i]]->SetValue(0);
+
+                        matches.push_back(horizontal[i]);
+                    }
+                    horizontal.clear();
+                }*/
+                if (horizontal.size() < 3)
+                {
+                    horizontal.clear();
+                    horizontal.push_back(index(newCol, newRow));
+                }
+            }
+            FloodFill(newRow, newCol, have_matches, horizontal, verical, matches);
+        }
+    }
+}
+
+bool DiamondBoard::FindAllMatches()
+{
+    std::vector<int> horizontal;
+    std::vector<int> vertical;
+    std::vector<int> matches;
+    visited.assign(height, std::vector<bool>(width, false));
+
+    bool have_matches = false;
+   
+    for (int i = 0; i < height; ++i)
+    {
+        for (int j = 0; j < width; ++j)
+        {
+            if (!visited[i][j])
+            {
+                horizontal.push_back(index(j, i));
+                vertical.push_back(index(j, i));
+                FloodFill(i, j, have_matches, horizontal, vertical, matches);
+                if (horizontal.size() >= 3)
+                {
+                    have_matches = true;
+                    for (int i = 0; i < horizontal.size(); ++i)
+                    {
+                        std::cout << horizontal[i] << std::endl;
+                        matches.push_back(horizontal[i]);
+                    }
+                }
+                horizontal.clear();
+                vertical.clear();
             }
         }
     }
-    return is_match;
+
+    for (int i = 0; i < matches.size(); ++i)
+    {
+        Board[matches[i]]->SetValue(0);
+        //std::cout << matches[i] << std::endl;
+    }
+    matches.clear();
+    return have_matches;
+}
+
+void DiamondBoard::CheckRow(int row, int c)
+{
+    int matchValue = Board[index(c, row)]->GetValue();
+
+    if (Board[index(c + 1, row)]->GetValue() == matchValue 
+    && Board[index(c + 2, row)]->GetValue() == matchValue)
+    {
+        matches.push_back(index(c, row));
+        matches.push_back(index(c + 1, row));
+        matches.push_back(index(c + 2, row));
+    }
+}
+
+void DiamondBoard::CheckColumn(int r, int column)
+{
+    int matchValue = Board[index(column, r)]->GetValue();
+
+    if (Board[index(column, r + 1)]->GetValue() == matchValue 
+    && Board[index(column, r + 2)]->GetValue() == matchValue)
+    {
+        matches.push_back(index(column, r));
+        matches.push_back(index(column, r + 1));
+        matches.push_back(index(column, r + 2));
+    }
+}
+
+void DiamondBoard::Check3x3Square(int row, int col)
+{
+    for (int r = row; r <= row + 2; ++r)
+    {
+        CheckRow(r, col);
+    }
+
+    for (int c = col; c <= col + 2; ++c)
+    {
+        CheckColumn(row, c);
+    }
+}
+
+bool DiamondBoard::CheckForMatches()
+{
+    bool isMatch = false;
+
+    for (int row = 0; row < height - 2; ++row)
+    {
+        for (int col = 0; col < width - 2; ++col) 
+        {
+            Check3x3Square(row, col);
+        }
+    }
+
+    if (matches.size() > 0)
+    {
+        for (int i = 0; i < matches.size(); ++i)
+        {
+            Board[matches[i]]->SetValue(0);
+        }
+        matches.clear();
+        isMatch = true;
+    }
+
+    return isMatch;
 }
 
 std::vector<int> DiamondBoard::ExportBoard()

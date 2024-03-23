@@ -222,9 +222,9 @@ void BoardView::UpdateMappingBoard(std::vector<int> board)
         for (int j = 0; j < width; ++j) 
         {
             mapping_board[index(j, i)] = board[index(j, i)];
-            std::cout << mapping_board[index(j, i)] << " ";
+            //std::cout << mapping_board[index(j, i)] << " ";
         }
-        std::cout << std::endl;
+        //std::cout << std::endl;
     }
 }
 

@@ -73,7 +73,7 @@ void App::Initialize()
     Controller = std::make_unique<BoardController>(Board, View);
 
     Board->Initialize();
-    while (Board->CheckMatch())
+    while (Board->CheckForMatches())
     {
         Board->FillingBoard();
     }
@@ -129,7 +129,6 @@ void App::DesktopGameLoop()
     while (_isRunning)
     {
         prepareScene();
-
         SDL_Event event;
         // Polling input from mouse/keyboard
         while (SDL_PollEvent(&event))
@@ -145,26 +144,26 @@ void App::DesktopGameLoop()
             }
             
 	    }
-        // Running the game logic such as matches, swapping and generating new diamonds
+        // Running the game logic such as finding matches, swapping and generating new diamonds
         Controller->Update();
-        
         // Rendering the diamond board
         View->Render();
-
-        // Swapping the diamonds back if there is no match
+        // Pause for 100ms to better display diamond swapping
         if (Controller->is_swapped_back)
         {
             SDL_Delay(100);
         }
         presentScene();
+        // Pause for 200ms to display matches
         if (Controller->is_match)
         {
             SDL_Delay(200);
         }
-        
+        // Swapping diamonds back if not match
         Controller->SwapAgainIfNotMatch();
-        
+        // Clear matches
         View->ClearDiamondMatch();
+        // Filling the diamond board after clearing
         Controller->UpdateAfterMatch();
         SDL_Delay(16);
     }
