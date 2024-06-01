@@ -126,8 +126,10 @@ void App::BrowserGameLoop()
 
 void App::DesktopGameLoop()
 {
+    Uint32 frameStart, frameEnd, frameTime, frames = 0;
     while (_isRunning)
     {
+        frameStart = SDL_GetTicks();
         prepareScene();
         SDL_Event event;
         // Polling input from mouse/keyboard
@@ -154,6 +156,16 @@ void App::DesktopGameLoop()
             SDL_Delay(100);
         }
         presentScene();
+
+        // Measure fps
+        frames++;
+        frameEnd = SDL_GetTicks();
+        frameTime = frameEnd - frameStart;
+        float frameRate = frames / (frameTime / 1000.0f);
+        std::cout << "Frame rate: " << frameRate << std::endl;
+        frames = 0;
+        frameStart = SDL_GetTicks();
+
         // Pause for 200ms to display matches
         if (Controller->is_match)
         {
